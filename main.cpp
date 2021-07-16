@@ -3,6 +3,6 @@
 
 int main() {
     bool error;
-    std::cout << secureFactorial(&error, 34.0) << " (" << error << ")" << std::endl;
+    std::cout << secureFactorial(&error, 34.0f) << " (" << error << ")" << std::endl;
     return 0;
 }

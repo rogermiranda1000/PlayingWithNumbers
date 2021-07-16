@@ -13,4 +13,4 @@ float securePower(bool *error, float a, float b);
 
 float secureNegate(bool *error, float a);
 float secureFactorial(bool *error, float a);
-float secureFactorialI(bool *error, int a);
+float secureFactorial(bool *error, int a);

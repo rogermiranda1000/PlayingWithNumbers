@@ -3,7 +3,7 @@
 #include <cassert>
 #include "secure_math.h"
 
-float _cache_factorial[FACTORIAL_OVERFLOW] = {1};
+static float _cache_factorial[FACTORIAL_OVERFLOW] = {1};
 
 float secureAdd(bool *error, float a, float b) {
     std::feclearexcept(FE_OVERFLOW | FE_UNDERFLOW);
@@ -65,10 +65,10 @@ float secureFactorial(bool *error, float a) {
         return -1;
     }
     // TODO factorial decimal
-    return secureFactorialI(error, value);
+    return secureFactorial(error, value);
 }
 
-float secureFactorialI(bool *error, int a) {
+float secureFactorial(bool *error, int a) {
     if (a < 0 || a >= FACTORIAL_OVERFLOW) {
         // no es positivo, o es decimal
         // >34 daria overflow en float
