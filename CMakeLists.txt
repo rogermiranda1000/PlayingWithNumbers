@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(Combinacions4)
 
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Combinacions4 main.cpp)
+add_executable(Combinacions4 main.cpp secure_math.h secure_math.cpp combinatoria.cpp combinatoria.h bst.h bst.cpp float_range.h float_range.cpp results.cpp results.h)
