@@ -10,6 +10,11 @@ Result::Result(float result, Result *a, Result *b, Operation type) {
     }
 }
 
+/* OPERATOR OVERLOADING */
+
+/**
+ * toString()
+ */
 std::ostream& operator<<(std::ostream &strm, const Result &a) {
     switch (a._origen.type) {
         case NONE:
@@ -35,4 +40,9 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
         default:
             return strm << "?";
     }
+}
+
+Result *Result::operator+(Result *r) {
+    // TODO check if valid
+    return new Result(this->_result+r->_result, this, r, ADD);
 }

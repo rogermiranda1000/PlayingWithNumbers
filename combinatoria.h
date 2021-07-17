@@ -34,7 +34,9 @@ public:
     Result(float result) : Result(result, nullptr, nullptr, NONE) {}
     //~Result(void);
 
+    /* OPERATOR OVERLOADING */
     friend std::ostream& operator<<(std::ostream &strm, const Result &a); // toString()
+    Result *operator+(Result *r);
 private:
     Combination _origen;
     float _result;
