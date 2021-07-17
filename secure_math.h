@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cfenv>
-#include <cmath>
+#include "float_range.h"
 
 #define FACTORIAL_OVERFLOW 35 // 35! excede el límite del float
 

@@ -16,6 +16,8 @@ int main() {
     root = insert(root, 40);
     root = insert(root, 50);
     root = insert(root, 25);
+    //std::vector<Node*> r = searchAll(root, 20, 11);
+    Node* r = search(root, 20, 11);
 
     delete a;
     delete b;

@@ -7,12 +7,6 @@ int height(Node *N) {
     return N->height;
 }
 
-// A utility function to get maximum
-// of two integers
-int max(int a, int b) {
-    return (a > b)? a : b;
-}
-
 /* Helper function that allocates a
    new node with the given key and
    NULL left and right pointers. */
@@ -38,10 +32,8 @@ Node *rightRotate(Node *y) {
     y->left = T2;
 
     // Update heights
-    y->height = max(height(y->left),
-                    height(y->right)) + 1;
-    x->height = max(height(x->left),
-                    height(x->right)) + 1;
+    y->height = std::max(height(y->left), height(y->right)) + 1;
+    x->height = std::max(height(x->left), height(x->right)) + 1;
 
     // Return new root
     return x;
@@ -59,10 +51,8 @@ Node *leftRotate(Node *x) {
     x->right = T2;
 
     // Update heights
-    x->height = max(height(x->left),
-                    height(x->right)) + 1;
-    y->height = max(height(y->left),
-                    height(y->right)) + 1;
+    x->height = std::max(height(x->left), height(x->right)) + 1;
+    y->height = std::max(height(y->left), height(y->right)) + 1;
 
     // Return new root
     return y;
@@ -89,8 +79,7 @@ Node* insert(Node* node, float key) {
         return node;
 
     /* 2. Update height of this ancestor node */
-    node->height = 1 + max(height(node->left),
-                           height(node->right));
+    node->height = 1 + std::max(height(node->left), height(node->right));
 
     /* 3. Get the balance factor of this ancestor
         node to check whether this node became
@@ -124,4 +113,44 @@ Node* insert(Node* node, float key) {
 
     /* return the (unchanged) node pointer */
     return node;
+}
+
+
+std::vector<Node*> searchAll(Node *root, float value, float range = 0.0000001) {
+    std::vector<Node*> results;
+    return searchAll(&results, root, value, range);
+}
+
+// TODO more accurate range
+std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float value, float range = 0.0000001) {
+    /* base case */
+    if (root == nullptr) return *results;
+
+    float k1 = value-range, k2 = value+range;
+
+    /* inorder type */
+
+    /*  If root->data is greater than k1,
+        then only we can get o/p keys
+        in left subtree */
+    if (k1 < root->key) searchAll(results, root->left, value, range);
+
+    /* if root's data lies in range,
+    then prints root's data */
+    if (k1 <= root->key && k2 >= root->key) results->push_back(root);
+
+    /*  If root->data is smaller than k2,
+        then only we can get o/p keys
+        in right subtree */
+    if (k2 > root->key) searchAll(results, root->right, value, range);
+
+    return *results;
+}
+
+Node *search(Node *root, float value, float range = 0.0000001) {
+    std::vector<Node*> r = searchAll(root, value, range);
+    for (Node *element : r) {
+        if (nearlyEqual(value, element->key)) return element;
+    }
+    return nullptr;
 }

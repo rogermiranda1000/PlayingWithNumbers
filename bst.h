@@ -3,12 +3,17 @@
 
 // C++ program to insert a node in AVL tree
 #include<bits/stdc++.h>
-using namespace std;
+#include <vector>
+#include <cmath> // max
+#include "float_range.h"
 
 // An AVL tree node
 class Node {
 public:
     friend Node* insert(Node* node, float key);
+    friend std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float value, float range);
+    friend std::vector<Node*> searchAll(Node *root, float value, float range);
+    friend Node *search(Node *root, float value, float range);
 
 private:
     float key;

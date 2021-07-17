@@ -1,6 +1,3 @@
-#include <cfloat>
-#include <limits>
-#include <cassert>
 #include "secure_math.h"
 
 static float _cache_factorial[FACTORIAL_OVERFLOW] = {1};
@@ -44,17 +41,6 @@ float secureNegate(bool *error, float a) {
     // TODO hay algo malo con negar?
     *error = false;
     return -a;
-}
-
-bool nearlyEqual(float a, float b, float epsilon = 128 * FLT_EPSILON, float abs_th = FLT_MIN) {
-    assert(std::numeric_limits<float>::epsilon() <= epsilon);
-    assert(epsilon < 1.f);
-
-    if (a == b) return true;
-
-    float diff = std::abs(a-b);
-    float norm = std::fmin((std::abs(a) + std::abs(b)), std::numeric_limits<float>::max());
-    return diff < std::fmax(abs_th, epsilon * norm);
 }
 
 float secureFactorial(bool *error, float a) {
