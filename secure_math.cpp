@@ -33,7 +33,7 @@ float secureDivide(bool *error, float a, float b) {
     return r;
 }
 
-float securePower(bool *error, float a, float b) {
+float securePow(bool *error, float a, float b) {
     std::feclearexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
     float r = powf(a, b);
     *error = (bool)std::fetestexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);

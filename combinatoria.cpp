@@ -10,6 +10,10 @@ Result::Result(float result, Result *a, Result *b, Operation type) {
     }
 }
 
+float Result::getResult() {
+    return this->_result;
+}
+
 /* OPERATOR OVERLOADING */
 
 /**
@@ -25,18 +29,14 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
             return strm << "(" << *a._origen.a << ")-(" << *a._origen.b << ")";
         case DIVIDE:
             return strm << "(" << *a._origen.a << ")/(" << *a._origen.b << ")";
-        case INSERVE_DIVIDE:
-            return strm << "(" << *a._origen.b << ")/(" << *a._origen.a << ")";
         case MULTIPLY:
             return strm << "(" << *a._origen.a << ")*(" << *a._origen.b << ")";
         case POW:
             return strm << "(" << *a._origen.a << ")^(" << *a._origen.b << ")";
-        case INSERVE_POW:
-            return strm << "(" << *a._origen.b << ")^(" << *a._origen.a << ")";
         case NEGATE:
             return strm << "-(" << *a._origen.a << ")";
         case FACTORIAL:
-            return strm << "!(" << *a._origen.a << ")";
+            return strm << "(" << *a._origen.a << ")!";
         default:
             return strm << "?";
     }
@@ -47,4 +47,60 @@ Result *Result::add(Result *r) {
     float result = secureAdd(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, this, r, ADD);
+}
+
+Result *Result::subtract(Result *r) {
+    bool error;
+    float result = secureSubtract(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, this, r, SUBTRACT);
+}
+
+Result *Result::divide(Result *r) {
+    bool error;
+    float result = secureDivide(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, this, r, DIVIDE);
+}
+
+Result *Result::inverseDivide(Result *r) {
+    bool error;
+    float result = secureDivide(&error, r->_result, this->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, DIVIDE);
+}
+
+Result *Result::multiply(Result *r) {
+    bool error;
+    float result = secureMultiply(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, this, r, MULTIPLY);
+}
+
+Result *Result::pow(Result *r) {
+    bool error;
+    float result = securePow(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, this, r, POW);
+}
+
+Result *Result::inversePow(Result *r) {
+    bool error;
+    float result = securePow(&error, r->_result, this->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, POW);
+}
+
+Result *Result::negate() {
+    bool error;
+    float result = secureNegate(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, NEGATE);
+}
+
+Result *Result::factorial() {
+    bool error;
+    float result = secureFactorial(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, FACTORIAL);
 }
