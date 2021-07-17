@@ -14,6 +14,30 @@ float Result::getResult() {
     return this->_result;
 }
 
+void Result::addIfNotNull(std::vector<Result*> *list, Result *element) {
+    if (element == nullptr) return;
+    list->push_back(element);
+}
+
+std::vector<Result*> Result::combine(Result *a) {
+    std::vector<Result*> combinations;
+    Result::addIfNotNull(&combinations, this->add(a));
+    Result::addIfNotNull(&combinations, this->subtract(a));
+    Result::addIfNotNull(&combinations, this->divide(a));
+    Result::addIfNotNull(&combinations, this->inverseDivide(a));
+    Result::addIfNotNull(&combinations, this->multiply(a));
+    Result::addIfNotNull(&combinations, this->pow(a));
+    Result::addIfNotNull(&combinations, this->inversePow(a));
+    return combinations;
+}
+
+std::vector<Result*> Result::combineSelf() {
+    std::vector<Result*> combinations;
+    Result::addIfNotNull(&combinations, this->negate());
+    Result::addIfNotNull(&combinations, this->factorial());
+    return combinations;
+}
+
 /* OPERATOR OVERLOADING */
 
 /**

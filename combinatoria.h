@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstdint>
+#include <vector>
 #include "secure_math.h"
 
 typedef enum {
@@ -35,6 +36,8 @@ public:
 
     /* METHODS */
     float getResult();
+    std::vector<Result*> combine(Result *a);    // recuerda eliminar los resultados al terminar!
+    std::vector<Result*> combineSelf();         // recuerda eliminar los resultados al terminar!
 
     /* OPERATOR OVERLOADING */
     friend std::ostream& operator<<(std::ostream &strm, const Result &a); // toString()
@@ -51,4 +54,6 @@ private:
     Combination _origen;
     float _result;
     uint8_t _uses; // número de veces que se ha usado el número
+
+    static void addIfNotNull(std::vector<Result*> *list, Result *element);
 };

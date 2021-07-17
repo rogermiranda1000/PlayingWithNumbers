@@ -3,11 +3,9 @@
 #include "bst.h"
 
 int main() {
-    Result *a = new Result(3.f), *b = new Result(-3.f);
+    Result *a = new Result(3e38), *b = new Result(3.f);
     Result *c = a->add(b);
     std::cout << *c << " [" << c->getResult() << "]" << std::endl;
-    Result *d = a->factorial();
-    std::cout << *d << " [" << d->getResult() << "]" << std::endl;
 
     Node *root = NULL;
     root = insert(root, 10);
@@ -19,10 +17,11 @@ int main() {
     //std::vector<Node*> r = searchAll(root, 20, 11);
     Node* r = search(root, 20, 11);
 
+    std::vector<Result*> aux = a->combine(b);
+
     delete a;
     delete b;
     delete c;
-    delete d;
 
     return 0;
 }
