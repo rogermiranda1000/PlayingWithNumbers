@@ -42,7 +42,9 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
     }
 }
 
-Result *Result::operator+(Result *r) {
-    // TODO check if valid
-    return new Result(this->_result+r->_result, this, r, ADD);
+Result *Result::add(Result *r) {
+    bool error;
+    float result = secureAdd(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, this, r, ADD);
 }

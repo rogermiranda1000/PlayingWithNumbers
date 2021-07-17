@@ -36,7 +36,7 @@ public:
 
     /* OPERATOR OVERLOADING */
     friend std::ostream& operator<<(std::ostream &strm, const Result &a); // toString()
-    Result *operator+(Result *r);
+    Result *add(Result *r);
 private:
     Combination _origen;
     float _result;
