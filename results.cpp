@@ -17,7 +17,9 @@ Results::~Results() {
 bool Results::add(Result* result) {
     uint8_t uses = result->getUses()-1; // si tiene 'n' numeros, se almacena en 'n-1' (ya que es imposible que tenga 0 números)
     if (uses >= this->_size) return false;
-    this->_list[uses] = insert(this->_list[uses], result);
+    bool error;
+    this->_list[uses] = insert(this->_list[uses], result, &error);
+    if (error) return false;
     this->_unchecked.push_back(result);
     return true;
 }

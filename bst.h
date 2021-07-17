@@ -11,7 +11,7 @@
 // An AVL tree node
 class Node {
 public:
-    friend Node* insert(Node* node, Result *result);
+    friend Node* insert(Node* node, Result *result, bool *error);
     friend std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float value, float range);
     friend std::vector<Node*> searchAll(Node *root, float value, float range);
     friend Node *search(Node *root, float value, float range);

@@ -67,16 +67,20 @@ int getBalance(Node *N) {
 // Recursive function to insert a key
 // in the subtree rooted with node and
 // returns the new root of the subtree.
-Node* insert(Node* node, Result *result) {
+Node* insert(Node* node, Result *result, bool *error) {
+    *error = false;
     /* 1. Perform the normal BST insertion */
     if (node == nullptr) return(newNode(result));
 
     if (result->getResult() < node->result->getResult())
-        node->left = insert(node->left, result);
+        node->left = insert(node->left, result, error);
     else if (result->getResult() > node->result->getResult())
-        node->right = insert(node->right, result);
-    else // Equal keys are not allowed in BST
+        node->right = insert(node->right, result, error);
+    else {
+        // Equal keys are not allowed in BST
+        *error = true;
         return node;
+    }
 
     /* 2. Update height of this ancestor node */
     node->height = 1 + std::max(height(node->left), height(node->right));
