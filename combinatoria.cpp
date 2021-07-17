@@ -14,6 +14,10 @@ float Result::getResult() {
     return this->_result;
 }
 
+uint8_t Result::getUses() {
+    return this->_uses;
+}
+
 void Result::addIfNotNull(std::vector<Result*> *list, Result *element) {
     if (element == nullptr) return;
     list->push_back(element);

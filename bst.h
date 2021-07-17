@@ -6,23 +6,26 @@
 #include <vector>
 #include <cmath> // max
 #include "float_range.h"
+#include "combinatoria.h"
 
 // An AVL tree node
 class Node {
 public:
-    friend Node* insert(Node* node, float key);
+    friend Node* insert(Node* node, Result *result);
     friend std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float value, float range);
     friend std::vector<Node*> searchAll(Node *root, float value, float range);
     friend Node *search(Node *root, float value, float range);
+    friend std::vector<Result*> getInorder(std::vector<Result*> *list, Node *root);
+    friend std::vector<Result*> getInorder(Node *root);
 
 private:
-    float key;
+    Result *result;
     Node *left;
     Node *right;
     int height;
 
     friend Node *rightRotate(Node *y);
-    friend Node* newNode(float key);
+    friend Node* newNode(Result *result);
     friend int height(Node *N);
     friend Node *leftRotate(Node *x);
     friend int getBalance(Node *N);

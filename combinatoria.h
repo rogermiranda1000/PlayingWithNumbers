@@ -36,6 +36,7 @@ public:
 
     /* METHODS */
     float getResult();
+    uint8_t getUses();
     std::vector<Result*> combine(Result *a);    // recuerda eliminar los resultados al terminar!
     std::vector<Result*> combineSelf();         // recuerda eliminar los resultados al terminar!
 

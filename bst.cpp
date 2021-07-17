@@ -10,9 +10,9 @@ int height(Node *N) {
 /* Helper function that allocates a
    new node with the given key and
    NULL left and right pointers. */
-Node* newNode(float key) {
+Node* newNode(Result *result) {
     Node* node = new Node();
-    node->key = key;
+    node->result = result;
     node->left = nullptr;
     node->right = nullptr;
     node->height = 1; // new node is initially
@@ -67,14 +67,14 @@ int getBalance(Node *N) {
 // Recursive function to insert a key
 // in the subtree rooted with node and
 // returns the new root of the subtree.
-Node* insert(Node* node, float key) {
+Node* insert(Node* node, Result *result) {
     /* 1. Perform the normal BST insertion */
-    if (node == nullptr) return(newNode(key));
+    if (node == nullptr) return(newNode(result));
 
-    if (key < node->key)
-        node->left = insert(node->left, key);
-    else if (key > node->key)
-        node->right = insert(node->right, key);
+    if (result->getResult() < node->result->getResult())
+        node->left = insert(node->left, result);
+    else if (result->getResult() > node->result->getResult())
+        node->right = insert(node->right, result);
     else // Equal keys are not allowed in BST
         return node;
 
@@ -90,22 +90,22 @@ Node* insert(Node* node, float key) {
     // there are 4 cases
 
     // Left Left Case
-    if (balance > 1 && key < node->left->key)
+    if (balance > 1 && result->getResult() < node->left->result->getResult())
         return rightRotate(node);
 
     // Right Right Case
-    if (balance < -1 && key > node->right->key)
+    if (balance < -1 && result->getResult() > node->right->result->getResult())
         return leftRotate(node);
 
     // Left Right Case
-    if (balance > 1 && key > node->left->key)
+    if (balance > 1 && result->getResult() > node->left->result->getResult())
     {
         node->left = leftRotate(node->left);
         return rightRotate(node);
     }
 
     // Right Left Case
-    if (balance < -1 && key < node->right->key)
+    if (balance < -1 && result->getResult() < node->right->result->getResult())
     {
         node->right = rightRotate(node->right);
         return leftRotate(node);
@@ -133,16 +133,16 @@ std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float valu
     /*  If root->data is greater than k1,
         then only we can get o/p keys
         in left subtree */
-    if (k1 < root->key) searchAll(results, root->left, value, range);
+    if (k1 < root->result->getResult()) searchAll(results, root->left, value, range);
 
     /* if root's data lies in range,
     then prints root's data */
-    if (k1 <= root->key && k2 >= root->key) results->push_back(root);
+    if (k1 <= root->result->getResult() && k2 >= root->result->getResult()) results->push_back(root);
 
     /*  If root->data is smaller than k2,
         then only we can get o/p keys
         in right subtree */
-    if (k2 > root->key) searchAll(results, root->right, value, range);
+    if (k2 > root->result->getResult()) searchAll(results, root->right, value, range);
 
     return *results;
 }
@@ -150,7 +150,21 @@ std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float valu
 Node *search(Node *root, float value, float range = 0.0000001) {
     std::vector<Node*> r = searchAll(root, value, range);
     for (Node *element : r) {
-        if (nearlyEqual(value, element->key)) return element;
+        if (nearlyEqual(value, element->result->getResult())) return element;
     }
     return nullptr;
+}
+
+std::vector<Result*> getInorder(std::vector<Result*> *list, Node *root) {
+    if (root != nullptr) {
+        getInorder(list, root->left);
+        list->push_back(root->result);
+        getInorder(list, root->right);
+    }
+    return *list;
+}
+
+std::vector<Result*> getInorder(Node *root) {
+    std::vector<Result*> list;
+    return getInorder(&list, root);
 }

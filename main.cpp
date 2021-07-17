@@ -1,27 +1,27 @@
 #include <iostream>
 #include "combinatoria.h"
-#include "bst.h"
+#include "results.h"
 
-int main() {
-    Result *a = new Result(3e38), *b = new Result(3.f);
-    Result *c = a->add(b);
-    std::cout << *c << " [" << c->getResult() << "]" << std::endl;
+/**
+ * Ejecutad "./combinaciones P M N"
+ * P: el número a usar
+ * M: las veces que se va a usar el número
+ * N: el resultado esperado
+ *
+ * Ej: obtener el 5 (N) usando tres (M) cuatros (P)
+ */
+int main(int argc, char *argv[]) {
+    if (argc != 4) return EXIT_FAILURE;
 
-    Node *root = NULL;
-    root = insert(root, 10);
-    root = insert(root, 20);
-    root = insert(root, 30);
-    root = insert(root, 40);
-    root = insert(root, 50);
-    root = insert(root, 25);
-    //std::vector<Node*> r = searchAll(root, 20, 11);
-    Node* r = search(root, 20, 11);
+    Results results( strtol(argv[2], nullptr, 10) );
+    Result *a = new Result( strtol(argv[1], nullptr, 10) );
 
-    std::vector<Result*> aux = a->combine(b);
+    results.add(a);
 
-    delete a;
-    delete b;
-    delete c;
+    for(Result* aux : a->combineSelf()) {
+        if (!results.add(aux)) delete aux;
+        else std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
+    }
 
     return 0;
 }
