@@ -10,8 +10,11 @@ public:
     ~Results();
 
     bool add(Result* result);
+    std::vector<Result*> getUnchecked();
+    std::vector<Result*> getAll();
 
 private:
     uint8_t _size;
     Node **_list;
+    std::vector<Result*> _unchecked;
 };
