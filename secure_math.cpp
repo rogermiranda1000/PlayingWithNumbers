@@ -79,7 +79,7 @@ float secureFactorial(bool *error, int a) {
     *error = false;
     if (_cache_factorial[a] == 0) {
         // no está en la cache; hay que calcularlo
-        _cache_factorial[a] = (float)a*secureFactorialI(error, a-1);
+        _cache_factorial[a] = (float)a*secureFactorial(error, a-1);
     }
     return _cache_factorial[a];
 }

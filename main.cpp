@@ -1,8 +1,9 @@
 #include <iostream>
-#include "secure_math.h"
+#include "combinatoria.h"
 
 int main() {
-    bool error;
-    std::cout << secureFactorial(&error, 34.0f) << " (" << error << ")" << std::endl;
+    Result *a = new Result(3.f), *b = new Result(-3.f);
+    std::cout << *a << std::endl;
+    std::cout << Result(0, a, b, ADD) << std::endl;
     return 0;
 }
