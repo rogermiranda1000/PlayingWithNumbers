@@ -3,6 +3,8 @@
 #include "results.h"
 #include "float_range.h"
 
+#define DEBUG
+
 /**
  * Ejecutad "./combinaciones P M N"
  * P: el número a usar
@@ -26,7 +28,9 @@ int main(int argc, char *argv[]) {
             for (Result *aux : unchecked->combineSelf()) {
                 if (!results.add(aux)) delete aux;
                 else {
+#ifdef DEBUG
                     std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
+#endif
                     if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) return 0;
                 }
             }
@@ -36,7 +40,9 @@ int main(int argc, char *argv[]) {
                 for (Result *aux : unchecked->combine(aux2)) {
                     if (!results.add(aux)) delete aux;
                     else {
+#ifdef DEBUG
                         std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
+#endif
                         if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) return 0;
                     }
                 }
