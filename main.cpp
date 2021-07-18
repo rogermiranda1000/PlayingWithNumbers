@@ -23,17 +23,17 @@ int main(int argc, char *argv[]) {
 
     results.add(new Result( (float)strtol(argv[1], nullptr, 10) ));
 
-    while (true) {
+    std::vector<Result *> allUnchecked = results.getUnchecked();
+    do {
         std::vector<Result *> all = results.getAll();
-
-        for (Result *unchecked : results.getUnchecked()) {
+        for (Result *unchecked : allUnchecked) {
             for (Result *aux : unchecked->combineSelf()) {
                 if (!results.add(aux)) delete aux;
                 else {
 #ifdef DEBUG
                     std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
 #endif
-                    if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) return 0;
+                    if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
                 }
             }
 
@@ -44,12 +44,14 @@ int main(int argc, char *argv[]) {
 #ifdef DEBUG
                         std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
 #endif
-                        if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) return 0;
+                        if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
                     }
                 }
             }
         }
-    }
+
+        allUnchecked = results.getUnchecked();
+    } while (!allUnchecked.empty());
 
     return 0;
 }
