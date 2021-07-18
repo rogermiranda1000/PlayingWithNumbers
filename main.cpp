@@ -3,7 +3,7 @@
 #include "results.h"
 #include "float_range.h"
 
-//#define DEBUG
+#define DEBUG
 
 /**
  * Ejecutad "./combinaciones P M N"

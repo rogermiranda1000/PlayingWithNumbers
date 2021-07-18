@@ -98,12 +98,24 @@ std::vector<Result*> Result::predict(Node *elements, float expected) {
     /*Result::addIfNotNull(&combinations, this->module(a));
     Result::addIfNotNull(&combinations, this->inverseModule(a));*/
 #ifdef SQRT_OPERATIONS
-    /*Result::addIfNotNull(&combinations, this->root(a));
-    Result::addIfNotNull(&combinations, this->inverseRoot(a));*/
+    need = secureLogN(&error, expected, this->_result); // x^(1/?) = expected -> x = expected^? -> log[expected](x)
+    if (!error) Result::addIfNotNull(&combinations, this->root(search(elements, need, 0.0000001f)));
+
+    need = securePow(&error, expected, this->_result); // ?^(1/x) = expected -> expected^x
+    if (!error) {
+        tmp = search(elements, need, 0.0000001f);
+        if (tmp != nullptr) Result::addIfNotNull(&combinations, tmp->root(this));
+    }
 #endif
 #ifdef LOG_OPERATIONS
-    /*Result::addIfNotNull(&combinations, this->logN(a));
-    Result::addIfNotNull(&combinations, this->inverseLogN(a));*/
+    need = secureRoot(&error, this->_result, expected); // log[?](x) = expected -> ?^expected = x -> x^(1/expected)
+    if (!error) Result::addIfNotNull(&combinations, this->logN(search(elements, need, 0.0000001f)));
+
+    need = securePow(&error, this->_result, expected); // log[x](?) = expected -> x^expected = ?
+    if (!error) {
+        tmp = search(elements, need, 0.0000001f);
+        if (tmp != nullptr) Result::addIfNotNull(&combinations, tmp->logN(this));
+    }
 #endif
 
     return combinations;
@@ -131,7 +143,7 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
         case ROOT:
             return strm << "(" << *a._origen.a << ")^(1/(" << *a._origen.b << "))";
         case LOG_N:
-            return strm << "log[" << *a._origen.a << "](" << *a._origen.b << ")";
+            return strm << "log[" << *a._origen.b << "](" << *a._origen.a << ")";
         case MODULE:
             return strm << "(" << *a._origen.a << ")%(" << *a._origen.b << ")";
 

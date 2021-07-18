@@ -10,7 +10,7 @@
  * Enable operations like root, sqrt
  * /!\ Those are slow operations /!\
  */
-//#define SQRT_OPERATIONS
+#define SQRT_OPERATIONS
 
 /**
  * Enable operations like logN, ln and log10
