@@ -62,6 +62,16 @@ std::vector<Result*> Result::combineSelf() {
     return combinations;
 }
 
+std::vector<Result*> Result::predict(Node *elements, float expected) {
+    std::vector<Result*> combinations;
+
+    bool error;
+    float need = secureSubtract(&error, expected, this->_result); // x+? = expected
+    if (!error) Result::addIfNotNull(&combinations, this->add(search(elements, need, 0.0000001f)));
+
+    return combinations;
+}
+
 /* OPERATOR OVERLOADING */
 
 /**
@@ -108,6 +118,7 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
 
 Result *Result::add(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureAdd(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, this, r, ADD);

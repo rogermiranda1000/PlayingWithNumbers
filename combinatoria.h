@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include "secure_math.h"
+#include "bst.h"
 
 /**
  * Enable operations like root, sqrt
@@ -44,6 +45,7 @@ typedef enum {
 } Operation;
 
 class Result;
+class Node;
 
 typedef struct {
     Result *a;
@@ -64,6 +66,7 @@ public:
     uint8_t getUses();
     std::vector<Result*> combine(Result *a);    // recuerda eliminar los resultados al terminar!
     std::vector<Result*> combineSelf();         // recuerda eliminar los resultados al terminar!
+    std::vector<Result*> predict(Node *elements, float expected); // recuerda eliminar los resultados al terminar!
 
     /* OPERATOR OVERLOADING */
     friend std::ostream& operator<<(std::ostream &strm, const Result &a); // toString()

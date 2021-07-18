@@ -35,3 +35,8 @@ std::vector<Result*> Results::getAll() {
     }
     return copy;
 }
+
+Node* Results::get(uint8_t used) {
+    if (used == 0 || used > this->_size) return nullptr;
+    return this->_list[used-1];
+}
