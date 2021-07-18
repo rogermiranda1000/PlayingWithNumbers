@@ -5,6 +5,18 @@
 #include <vector>
 #include "secure_math.h"
 
+/**
+ * Enable operations like root, sqrt
+ * /!\ Those are slow operations /!\
+ */
+//#define SQRT_OPERATIONS
+
+/**
+ * Enable operations like logN, ln and log10
+ * /!\ Those are unprecise operations /!\
+ */
+//#define LOG_OPERATIONS
+
 typedef enum {
     NONE,
 
@@ -13,9 +25,14 @@ typedef enum {
     DIVIDE,         // a/b
     MULTIPLY,       // a*b
     POW,            // a^b
+    ROOT,           // a^(1/b)
+    LOG_N,          // log[b](a)
 
     NEGATE,         // -a
-    FACTORIAL       // a!
+    FACTORIAL,      // a!
+    SQRT,           // a^(1/2)
+    LN,             // ln(a)
+    LOG             // log(a)
 } Operation;
 
 class Result;
@@ -49,8 +66,15 @@ public:
     Result *multiply(Result *r);
     Result *pow(Result *r);
     Result *inversePow(Result *r);
+    Result *root(Result *r);
+    Result *inverseRoot(Result *r);
+    Result *logN(Result *r);
+    Result *inverseLogN(Result *r);
     Result *negate();
     Result *factorial();
+    Result *sqrt();
+    Result *naturalLog();
+    Result *log();
 private:
     Combination _origen;
     float _result;

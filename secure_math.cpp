@@ -37,6 +37,22 @@ float securePow(bool *error, float a, float b) {
     return r;
 }
 
+float secureRoot(bool *error, float a, float b) {
+    return securePow(error, a, 1.f/b);
+}
+
+float secureLogN(bool *error, float a, float b) {
+    std::feclearexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
+    float r = log10f(a);
+    *error = (bool)std::fetestexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
+    if (!(*error)) {
+        float tmp = log10f(b);
+        *error = (bool)std::fetestexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
+        if (!(*error)) r /= tmp;
+    }
+    return r;
+}
+
 float secureNegate(bool *error, float a) {
     // TODO hay algo malo con negar?
     *error = false;
@@ -68,4 +84,22 @@ float secureFactorial(bool *error, int a) {
         _cache_factorial[a] = (float)a*secureFactorial(error, a-1);
     }
     return _cache_factorial[a];
+}
+
+float secureSqrt(bool *error, float a) {
+    return securePow(error, a, 1.f/2.f);
+}
+
+float secureLn(bool *error, float a) {
+    std::feclearexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
+    float r = logf(a);
+    *error = (bool)std::fetestexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
+    return r;
+}
+
+float secureLog(bool *error, float a) {
+    std::feclearexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
+    float r = log10f(a);
+    *error = (bool)std::fetestexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
+    return r;
 }
