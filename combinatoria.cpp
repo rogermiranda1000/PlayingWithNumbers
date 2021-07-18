@@ -54,6 +54,7 @@ std::vector<Result*> Result::combineSelf() {
     Result::addIfNotNull(&combinations, this->naturalLog());
     Result::addIfNotNull(&combinations, this->log());
 #endif
+    Result::addIfNotNull(&combinations, this->gamma());
     return combinations;
 }
 
@@ -91,6 +92,8 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
             return strm << "ln(" << *a._origen.a << ")";
         case LOG:
             return strm << "log(" << *a._origen.a << ")";
+        case GAMMA:
+            return strm << "Γ(" << *a._origen.a << ")";
         default:
             return strm << "?";
     }
@@ -205,4 +208,11 @@ Result *Result::log() {
     float result = secureLog(&error, this->_result);
     if (error) return nullptr;
     return new Result(result, this, LOG);
+}
+
+Result *Result::gamma() {
+    bool error;
+    float result = secureGamma(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, GAMMA);
 }

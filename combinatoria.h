@@ -13,9 +13,15 @@
 
 /**
  * Enable operations like logN, ln and log10
- * /!\ Those are unprecise operations /!\
+ * /!\ Those are imprecise operations /!\
  */
 //#define LOG_OPERATIONS
+
+/**
+ * Enable the gamma operation
+ * /!\ Imprecise operation /!\
+ */
+//#define GAMMA_OPERATION
 
 typedef enum {
     NONE,
@@ -32,7 +38,8 @@ typedef enum {
     FACTORIAL,      // a!
     SQRT,           // a^(1/2)
     LN,             // ln(a)
-    LOG             // log(a)
+    LOG,            // log(a)
+    GAMMA           // Γ(x)
 } Operation;
 
 class Result;
@@ -75,6 +82,7 @@ public:
     Result *sqrt();
     Result *naturalLog();
     Result *log();
+    Result *gamma();
 private:
     Combination _origen;
     float _result;

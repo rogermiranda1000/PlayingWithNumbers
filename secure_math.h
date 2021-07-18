@@ -19,3 +19,4 @@ float secureFactorial(bool *error, int a);
 float secureSqrt(bool *error, float a);
 float secureLn(bool *error, float a);
 float secureLog(bool *error, float a);
+float secureGamma(bool *error, float a);
