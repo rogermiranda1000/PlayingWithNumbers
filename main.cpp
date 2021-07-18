@@ -24,6 +24,8 @@ int main(int argc, char *argv[]) {
     results.add(new Result( (float)strtol(argv[1], nullptr, 10) ));
 
     while (true) {
+        std::vector<Result *> all = results.getAll();
+
         for (Result *unchecked : results.getUnchecked()) {
             for (Result *aux : unchecked->combineSelf()) {
                 if (!results.add(aux)) delete aux;
@@ -35,7 +37,6 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            std::vector<Result *> all = results.getAll();
             for (Result *aux2 : all) {
                 for (Result *aux : unchecked->combine(aux2)) {
                     if (!results.add(aux)) delete aux;
