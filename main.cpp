@@ -3,6 +3,8 @@
 #include "results.h"
 #include "float_range.h"
 
+#define DEBUG
+
 /**
  * Ejecutad "./combinaciones P M N"
  * P: el número a usar
@@ -21,28 +23,35 @@ int main(int argc, char *argv[]) {
 
     results.add(new Result( (float)strtol(argv[1], nullptr, 10) ));
 
-    while (true) {
-        for (Result *unchecked : results.getUnchecked()) {
+    std::vector<Result *> allUnchecked = results.getUnchecked();
+    do {
+        std::vector<Result *> all = results.getAll();
+        for (Result *unchecked : allUnchecked) {
             for (Result *aux : unchecked->combineSelf()) {
                 if (!results.add(aux)) delete aux;
                 else {
+#ifdef DEBUG
                     std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
-                    if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) return 0;
+#endif
+                    if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
                 }
             }
 
-            std::vector<Result *> all = results.getAll();
             for (Result *aux2 : all) {
                 for (Result *aux : unchecked->combine(aux2)) {
                     if (!results.add(aux)) delete aux;
                     else {
+#ifdef DEBUG
                         std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
-                        if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) return 0;
+#endif
+                        if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
                     }
                 }
             }
         }
-    }
+
+        allUnchecked = results.getUnchecked();
+    } while (!allUnchecked.empty());
 
     return 0;
 }

@@ -32,6 +32,16 @@ std::vector<Result*> Result::combine(Result *a) {
     Result::addIfNotNull(&combinations, this->multiply(a));
     Result::addIfNotNull(&combinations, this->pow(a));
     Result::addIfNotNull(&combinations, this->inversePow(a));
+    /*Result::addIfNotNull(&combinations, this->module(a));
+    Result::addIfNotNull(&combinations, this->inverseModule(a));*/
+#ifdef SQRT_OPERATIONS
+    Result::addIfNotNull(&combinations, this->root(a));
+    Result::addIfNotNull(&combinations, this->inverseRoot(a));
+#endif
+#ifdef LOG_OPERATIONS
+    Result::addIfNotNull(&combinations, this->logN(a));
+    Result::addIfNotNull(&combinations, this->inverseLogN(a));
+#endif
     return combinations;
 }
 
@@ -39,6 +49,16 @@ std::vector<Result*> Result::combineSelf() {
     std::vector<Result*> combinations;
     Result::addIfNotNull(&combinations, this->negate());
     Result::addIfNotNull(&combinations, this->factorial());
+#ifdef SQRT_OPERATIONS
+    Result::addIfNotNull(&combinations, this->sqrt());
+#endif
+#ifdef LOG_OPERATIONS
+    Result::addIfNotNull(&combinations, this->naturalLog());
+    Result::addIfNotNull(&combinations, this->log());
+#endif
+#ifdef GAMMA_OPERATION
+    Result::addIfNotNull(&combinations, this->gamma());
+#endif
     return combinations;
 }
 
@@ -61,10 +81,26 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
             return strm << "(" << *a._origen.a << ")*(" << *a._origen.b << ")";
         case POW:
             return strm << "(" << *a._origen.a << ")^(" << *a._origen.b << ")";
+        case ROOT:
+            return strm << "(" << *a._origen.a << ")^(1/(" << *a._origen.b << "))";
+        case LOG_N:
+            return strm << "log[" << *a._origen.a << "](" << *a._origen.b << ")";
+        case MODULE:
+            return strm << "(" << *a._origen.a << ")%(" << *a._origen.b << ")";
+
         case NEGATE:
             return strm << "-(" << *a._origen.a << ")";
         case FACTORIAL:
             return strm << "(" << *a._origen.a << ")!";
+        case SQRT:
+            return strm << "(" << *a._origen.a << ")^(1/2)";
+        case LN:
+            return strm << "ln(" << *a._origen.a << ")";
+        case LOG:
+            return strm << "log(" << *a._origen.a << ")";
+        case GAMMA:
+            return strm << "Γ(" << *a._origen.a << ")";
+
         default:
             return strm << "?";
     }
@@ -118,6 +154,47 @@ Result *Result::inversePow(Result *r) {
     if (error) return nullptr;
     return new Result(result, r, this, POW);
 }
+Result *Result::root(Result *r) {
+    bool error;
+    float result = secureRoot(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, ROOT);
+}
+
+Result *Result::inverseRoot(Result *r) {
+    bool error;
+    float result = secureRoot(&error, r->_result, this->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, ROOT);
+}
+
+Result *Result::logN(Result *r) {
+    bool error;
+    float result = secureLogN(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, LOG_N);
+}
+
+Result *Result::inverseLogN(Result *r) {
+    bool error;
+    float result = secureLogN(&error, r->_result, this->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, LOG_N);
+}
+
+Result *Result::module(Result *r) {
+    bool error;
+    float result = secureModule(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, MODULE);
+}
+
+Result *Result::inverseModule(Result *r) {
+    bool error;
+    float result = secureModule(&error, r->_result, this->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, MODULE);
+}
 
 Result *Result::negate() {
     bool error;
@@ -131,4 +208,32 @@ Result *Result::factorial() {
     float result = secureFactorial(&error, this->_result);
     if (error) return nullptr;
     return new Result(result, this, FACTORIAL);
+}
+
+Result *Result::sqrt() {
+    bool error;
+    float result = secureSqrt(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, SQRT);
+}
+
+Result *Result::naturalLog() {
+    bool error;
+    float result = secureLn(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, LN);
+}
+
+Result *Result::log() {
+    bool error;
+    float result = secureLog(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, LOG);
+}
+
+Result *Result::gamma() {
+    bool error;
+    float result = secureGamma(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, GAMMA);
 }
