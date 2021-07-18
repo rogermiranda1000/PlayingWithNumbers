@@ -65,9 +65,46 @@ std::vector<Result*> Result::combineSelf() {
 std::vector<Result*> Result::predict(Node *elements, float expected) {
     std::vector<Result*> combinations;
 
+    Result *tmp;
     bool error;
     float need = secureSubtract(&error, expected, this->_result); // x+? = expected
     if (!error) Result::addIfNotNull(&combinations, this->add(search(elements, need, 0.0000001f)));
+
+    need = secureSubtract(&error, this->_result, expected); // x-? = expected
+    if (!error) Result::addIfNotNull(&combinations, this->subtract(search(elements, need, 0.0000001f)));
+
+    need = secureDivide(&error, this->_result, expected); // x/? = expected
+    if (!error) Result::addIfNotNull(&combinations, this->divide(search(elements, need, 0.0000001f)));
+
+    need = secureMultiply(&error, this->_result, expected); // ?/x = expected
+    if (!error) {
+        tmp = search(elements, need, 0.0000001f);
+        if (tmp != nullptr) Result::addIfNotNull(&combinations, tmp->divide(this));
+    }
+
+    need = secureDivide(&error, expected, this->_result); // x*? = expected
+    if (!error) Result::addIfNotNull(&combinations, this->multiply(search(elements, need, 0.0000001f)));
+
+    need = secureLogN(&error, this->_result, expected); // x^? = expected -> log[x](expected)
+    if (!error) Result::addIfNotNull(&combinations, this->pow(search(elements, need, 0.0000001f)));
+
+    need = secureRoot(&error, expected, this->_result); // ?^x = expected -> expected^(1/x)
+    if (!error) {
+        tmp = search(elements, need, 0.0000001f);
+        if (tmp != nullptr) Result::addIfNotNull(&combinations, tmp->pow(this));
+    }
+
+    // TODO implement other predictions
+    /*Result::addIfNotNull(&combinations, this->module(a));
+    Result::addIfNotNull(&combinations, this->inverseModule(a));*/
+#ifdef SQRT_OPERATIONS
+    /*Result::addIfNotNull(&combinations, this->root(a));
+    Result::addIfNotNull(&combinations, this->inverseRoot(a));*/
+#endif
+#ifdef LOG_OPERATIONS
+    /*Result::addIfNotNull(&combinations, this->logN(a));
+    Result::addIfNotNull(&combinations, this->inverseLogN(a));*/
+#endif
 
     return combinations;
 }
@@ -126,6 +163,7 @@ Result *Result::add(Result *r) {
 
 Result *Result::subtract(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureSubtract(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, this, r, SUBTRACT);
@@ -133,6 +171,7 @@ Result *Result::subtract(Result *r) {
 
 Result *Result::divide(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureDivide(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, this, r, DIVIDE);
@@ -140,6 +179,7 @@ Result *Result::divide(Result *r) {
 
 Result *Result::inverseDivide(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureDivide(&error, r->_result, this->_result);
     if (error) return nullptr;
     return new Result(result, r, this, DIVIDE);
@@ -147,6 +187,7 @@ Result *Result::inverseDivide(Result *r) {
 
 Result *Result::multiply(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureMultiply(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, this, r, MULTIPLY);
@@ -154,6 +195,7 @@ Result *Result::multiply(Result *r) {
 
 Result *Result::pow(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = securePow(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, this, r, POW);
@@ -161,12 +203,14 @@ Result *Result::pow(Result *r) {
 
 Result *Result::inversePow(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = securePow(&error, r->_result, this->_result);
     if (error) return nullptr;
     return new Result(result, r, this, POW);
 }
 Result *Result::root(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureRoot(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, r, this, ROOT);
@@ -174,6 +218,7 @@ Result *Result::root(Result *r) {
 
 Result *Result::inverseRoot(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureRoot(&error, r->_result, this->_result);
     if (error) return nullptr;
     return new Result(result, r, this, ROOT);
@@ -181,6 +226,7 @@ Result *Result::inverseRoot(Result *r) {
 
 Result *Result::logN(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureLogN(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, r, this, LOG_N);
@@ -188,6 +234,7 @@ Result *Result::logN(Result *r) {
 
 Result *Result::inverseLogN(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureLogN(&error, r->_result, this->_result);
     if (error) return nullptr;
     return new Result(result, r, this, LOG_N);
@@ -195,6 +242,7 @@ Result *Result::inverseLogN(Result *r) {
 
 Result *Result::module(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureModule(&error, this->_result, r->_result);
     if (error) return nullptr;
     return new Result(result, r, this, MODULE);
@@ -202,6 +250,7 @@ Result *Result::module(Result *r) {
 
 Result *Result::inverseModule(Result *r) {
     bool error;
+    if (r == nullptr) return nullptr;
     float result = secureModule(&error, r->_result, this->_result);
     if (error) return nullptr;
     return new Result(result, r, this, MODULE);
