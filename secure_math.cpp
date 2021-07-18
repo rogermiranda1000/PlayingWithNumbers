@@ -53,6 +53,14 @@ float secureLogN(bool *error, float a, float b) {
     return r;
 }
 
+// TODO negative module? decimal module?
+float secureModule(bool *error, float a, float b) {
+    std::feclearexcept(FE_INVALID);
+    float  r = fmodf(a, b);
+    *error = (bool)std::fetestexcept(FE_INVALID);
+    return r;
+}
+
 float secureNegate(bool *error, float a) {
     // TODO hay algo malo con negar?
     *error = false;

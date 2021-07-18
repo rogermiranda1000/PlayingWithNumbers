@@ -12,6 +12,7 @@ float secureDivide(bool *error, float a, float b);
 float securePow(bool *error, float a, float b);
 float secureRoot(bool *error, float a, float b);
 float secureLogN(bool *error, float a, float b);
+float secureModule(bool *error, float a, float b);
 
 float secureNegate(bool *error, float a);
 float secureFactorial(bool *error, float a);

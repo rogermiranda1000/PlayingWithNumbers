@@ -7,9 +7,7 @@ Results::Results(uint8_t size) {
 }
 
 Results::~Results() {
-    for (uint8_t n = 0; n < this->_size; n++) {
-        for (Result *aux : getInorder(this->_list[n])) delete aux;
-    }
+    for (Result *aux : this->getAll()) delete aux;
 
     free(this->_list);
 }

@@ -33,6 +33,7 @@ typedef enum {
     POW,            // a^b
     ROOT,           // a^(1/b)
     LOG_N,          // log[b](a)
+    MODULE,         // a%b
 
     NEGATE,         // -a
     FACTORIAL,      // a!
@@ -77,6 +78,8 @@ public:
     Result *inverseRoot(Result *r);
     Result *logN(Result *r);
     Result *inverseLogN(Result *r);
+    Result *module(Result *r);
+    Result *inverseModule(Result *r);
     Result *negate();
     Result *factorial();
     Result *sqrt();

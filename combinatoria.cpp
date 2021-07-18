@@ -32,6 +32,8 @@ std::vector<Result*> Result::combine(Result *a) {
     Result::addIfNotNull(&combinations, this->multiply(a));
     Result::addIfNotNull(&combinations, this->pow(a));
     Result::addIfNotNull(&combinations, this->inversePow(a));
+    /*Result::addIfNotNull(&combinations, this->module(a));
+    Result::addIfNotNull(&combinations, this->inverseModule(a));*/
 #ifdef SQRT_OPERATIONS
     Result::addIfNotNull(&combinations, this->root(a));
     Result::addIfNotNull(&combinations, this->inverseRoot(a));
@@ -54,7 +56,9 @@ std::vector<Result*> Result::combineSelf() {
     Result::addIfNotNull(&combinations, this->naturalLog());
     Result::addIfNotNull(&combinations, this->log());
 #endif
+#ifdef GAMMA_OPERATION
     Result::addIfNotNull(&combinations, this->gamma());
+#endif
     return combinations;
 }
 
@@ -81,6 +85,8 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
             return strm << "(" << *a._origen.a << ")^(1/(" << *a._origen.b << "))";
         case LOG_N:
             return strm << "log[" << *a._origen.a << "](" << *a._origen.b << ")";
+        case MODULE:
+            return strm << "(" << *a._origen.a << ")%(" << *a._origen.b << ")";
 
         case NEGATE:
             return strm << "-(" << *a._origen.a << ")";
@@ -94,6 +100,7 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
             return strm << "log(" << *a._origen.a << ")";
         case GAMMA:
             return strm << "Γ(" << *a._origen.a << ")";
+
         default:
             return strm << "?";
     }
@@ -173,6 +180,20 @@ Result *Result::inverseLogN(Result *r) {
     float result = secureLogN(&error, r->_result, this->_result);
     if (error) return nullptr;
     return new Result(result, r, this, LOG_N);
+}
+
+Result *Result::module(Result *r) {
+    bool error;
+    float result = secureModule(&error, this->_result, r->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, MODULE);
+}
+
+Result *Result::inverseModule(Result *r) {
+    bool error;
+    float result = secureModule(&error, r->_result, this->_result);
+    if (error) return nullptr;
+    return new Result(result, r, this, MODULE);
 }
 
 Result *Result::negate() {
