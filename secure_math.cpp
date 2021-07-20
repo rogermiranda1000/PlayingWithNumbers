@@ -41,6 +41,7 @@ float secureRoot(bool *error, float a, float b) {
     return securePow(error, a, 1.f/b);
 }
 
+// log[b](a)
 float secureLogN(bool *error, float a, float b) {
     std::feclearexcept(FE_OVERFLOW | FE_UNDERFLOW | FE_INVALID | FE_DIVBYZERO);
     float r = log10f(a);

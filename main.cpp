@@ -28,24 +28,32 @@ int main(int argc, char *argv[]) {
         std::vector<Result *> all = results.getAll();
         for (Result *unchecked : allUnchecked) {
             for (Result *aux : unchecked->combineSelf()) {
-                if (!results.add(aux)) delete aux;
-                else {
 #ifdef DEBUG
-                    std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
+                std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
 #endif
-                    if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
-                }
+                if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
+                if (!results.add(aux)) delete aux;
             }
 
-            for (Result *aux2 : all) {
-                for (Result *aux : unchecked->combine(aux2)) {
-                    if (!results.add(aux)) delete aux;
-                    else {
+            if (unchecked->getUses() < (uint8_t)ceilf((float)usingNNumbers/2.f)) {
+                for (Result *aux2 : all) {
+                    for (Result *aux : unchecked->combine(aux2)) {
 #ifdef DEBUG
                         std::cout << *aux << " [" << aux->getResult() << "]" << std::endl;
 #endif
                         if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
+                        if (!results.add(aux)) delete aux;
                     }
+                }
+            }
+            else {
+                // tenemos suficientes valores como para precedir
+                for (Result *aux : unchecked->predict(results.get(usingNNumbers-unchecked->getUses()), searchingFor)) {
+#ifdef DEBUG
+                    std::cout << "> " << *aux << " [" << aux->getResult() << "]" << std::endl;
+#endif
+                    if (aux->getUses() == usingNNumbers && nearlyEqual(aux->getResult(), searchingFor)) std::cout << "[*] " << *aux << " [" << aux->getResult() << "]" << std::endl;
+                    if (!results.add(aux)) delete aux;
                 }
             }
         }

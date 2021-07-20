@@ -151,10 +151,10 @@ std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float valu
     return *results;
 }
 
-Node *search(Node *root, float value, float range = 0.0000001) {
+Result *search(Node *root, float value, float range = 0.0000001f) {
     std::vector<Node*> r = searchAll(root, value, range);
     for (Node *element : r) {
-        if (nearlyEqual(value, element->result->getResult())) return element;
+        if (nearlyEqual(value, element->result->getResult())) return element->result;
     }
     return nullptr;
 }

@@ -12,6 +12,7 @@ public:
     bool add(Result* result);
     std::vector<Result*> getUnchecked();
     std::vector<Result*> getAll();
+    Node* get(uint8_t used);
 
 private:
     uint8_t _size;
