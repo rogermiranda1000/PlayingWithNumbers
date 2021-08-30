@@ -49,6 +49,7 @@ std::vector<Result*> Result::combineSelf() {
     std::vector<Result*> combinations;
     Result::addIfNotNull(&combinations, this->negate());
     Result::addIfNotNull(&combinations, this->factorial());
+    Result::addIfNotNull(&combinations, this->doubleFactorial());
 #ifdef SQRT_OPERATIONS
     Result::addIfNotNull(&combinations, this->sqrt());
 #endif
@@ -151,6 +152,8 @@ std::ostream& operator<<(std::ostream &strm, const Result &a) {
             return strm << "-(" << *a._origen.a << ")";
         case FACTORIAL:
             return strm << "(" << *a._origen.a << ")!";
+        case DOUBLE_FACTORIAL:
+            return strm << "(" << *a._origen.a << ")!!";
         case SQRT:
             return strm << "(" << *a._origen.a << ")^(1/2)";
         case LN:
@@ -280,6 +283,13 @@ Result *Result::factorial() {
     float result = secureFactorial(&error, this->_result);
     if (error) return nullptr;
     return new Result(result, this, FACTORIAL);
+}
+
+Result *Result::doubleFactorial() {
+    bool error;
+    float result = secureDoubleFactorial(&error, this->_result);
+    if (error) return nullptr;
+    return new Result(result, this, DOUBLE_FACTORIAL);
 }
 
 Result *Result::sqrt() {

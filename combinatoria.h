@@ -10,7 +10,7 @@
  * Enable operations like root, sqrt
  * /!\ Those are slow operations /!\
  */
-#define SQRT_OPERATIONS
+//#define SQRT_OPERATIONS
 
 /**
  * Enable operations like logN, ln and log10
@@ -38,6 +38,7 @@ typedef enum {
 
     NEGATE,         // -a
     FACTORIAL,      // a!
+    DOUBLE_FACTORIAL,// a!!
     SQRT,           // a^(1/2)
     LN,             // ln(a)
     LOG,            // log(a)
@@ -85,6 +86,7 @@ public:
     Result *inverseModule(Result *r);
     Result *negate();
     Result *factorial();
+    Result *doubleFactorial();
     Result *sqrt();
     Result *naturalLog();
     Result *log();

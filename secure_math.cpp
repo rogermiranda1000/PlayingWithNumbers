@@ -1,6 +1,7 @@
 #include "secure_math.h"
 
 static float _cache_factorial[FACTORIAL_OVERFLOW] = {1};
+static float _cache_double_factorial[DOUBLE_FACTORIAL_OVERFLOW] = {1};
 
 float secureAdd(bool *error, float a, float b) {
     std::feclearexcept(FE_OVERFLOW | FE_UNDERFLOW);
@@ -75,7 +76,6 @@ float secureFactorial(bool *error, float a) {
         *error = true;
         return -1;
     }
-    // TODO factorial decimal
     return secureFactorial(error, value);
 }
 
@@ -93,6 +93,32 @@ float secureFactorial(bool *error, int a) {
         _cache_factorial[a] = (float)a*secureFactorial(error, a-1);
     }
     return _cache_factorial[a];
+}
+
+float secureDoubleFactorial(bool *error, float a) {
+    int value = (int)roundf(a);
+    if (!nearlyEqual(a, (float)value)) {
+        // es decimal
+        *error = true;
+        return -1;
+    }
+    return secureDoubleFactorial(error, value);
+}
+
+float secureDoubleFactorial(bool *error, int a) {
+    if (a < 0 || a >= DOUBLE_FACTORIAL_OVERFLOW) {
+        // no es positivo, o es decimal
+        // >34 daria overflow en float
+        *error = true;
+        return -1;
+    }
+
+    *error = false;
+    if (_cache_double_factorial[a] == 0) {
+        // no está en la cache; hay que calcularlo
+        _cache_double_factorial[a] = (float)a*secureDoubleFactorial(error, a-2);
+    }
+    return _cache_double_factorial[a];
 }
 
 float secureSqrt(bool *error, float a) {
