@@ -6,3 +6,8 @@ Por ejemplo, obtener el 5 (N) usando tres (M) cuatros (P). El resultado de este 
 El objetivo era obtener el 2019 usando siete treses. El resultado "((3)^(3!))-((3-(-3))-(3!/((3!)^(-3))))" tardó apenas 6 segundos en mostrarse.
 
 Para ejecutar el compilado usad "./combinaciones P M N", siendo P, M y N los mencionados ya anteriormente.
+
+
+## Equivalente iterativo
+
+Se consiguió transformar el algoritmo recursivo original en iterativo. Aunque falta mejorarlo (no tiene ningun tipo de poda), este se puede encontrar [aquí](https://github.com/rogermiranda1000/combinacions3).
