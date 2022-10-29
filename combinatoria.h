@@ -46,7 +46,6 @@ typedef enum {
 } Operation;
 
 class Result;
-class Node;
 
 typedef struct {
     Result *a;
@@ -54,7 +53,7 @@ typedef struct {
     Operation type;
 } Combination;
 
-class Result {
+class Result: public NodeElementComparator<float> {
 public:
     /* CONSTRUCTOR/DESTRUCTOR */
     Result(float result, Result *a, Result *b, Operation type);
@@ -67,7 +66,7 @@ public:
     uint8_t getUses();
     std::vector<Result*> combine(Result *a);    // recuerda eliminar los resultados al terminar!
     std::vector<Result*> combineSelf();         // recuerda eliminar los resultados al terminar!
-    std::vector<Result*> predict(Node *elements, float expected); // recuerda eliminar los resultados al terminar!
+    std::vector<Result*> predict(Node<Result,float> *elements, float expected); // recuerda eliminar los resultados al terminar!
 
     /* OPERATOR OVERLOADING */
     friend std::ostream& operator<<(std::ostream &strm, const Result &a); // toString()

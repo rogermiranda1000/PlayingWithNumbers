@@ -1,30 +1,11 @@
 #include "bst.h"
 
-// A utility function to get the
-// height of the tree
-int height(Node *N) {
-    if (N == nullptr) return 0;
-    return N->height;
-}
-
-/* Helper function that allocates a
-   new node with the given key and
-   NULL left and right pointers. */
-Node* newNode(Result *result) {
-    Node* node = new Node();
-    node->result = result;
-    node->left = nullptr;
-    node->right = nullptr;
-    node->height = 1; // new node is initially
-    // added at leaf
-    return(node);
-}
-
-// A utility function to right
-// rotate subtree rooted with y
-// See the diagram given above.
-Node *rightRotate(Node *y) {
-    Node *x = y->left;
+/* A utility function to right
+   rotate subtree rooted with y
+   See the diagram given above. */
+NODE_TEMPLATE
+Node *Node::rightRotate() {
+    Node *x = this->left;
     Node *T2 = x->right;
 
     // Perform rotation
@@ -32,18 +13,19 @@ Node *rightRotate(Node *y) {
     y->left = T2;
 
     // Update heights
-    y->height = std::max(height(y->left), height(y->right)) + 1;
-    x->height = std::max(height(x->left), height(x->right)) + 1;
+    y->height = std::max(y->left.height, y->right.height) + 1;
+    x->height = std::max(x->left.height, x->right.height) + 1;
 
     // Return new root
     return x;
 }
 
-// A utility function to left
-// rotate subtree rooted with x
-// See the diagram given above.
-Node *leftRotate(Node *x) {
-    Node *y = x->right;
+/* A utility function to left
+   rotate subtree rooted with x
+   See the diagram given above. */
+NODE_TEMPLATE
+Node *Node::leftRotate() {
+    Node *y = this->right;
     Node *T2 = y->left;
 
     // Perform rotation
@@ -51,23 +33,24 @@ Node *leftRotate(Node *x) {
     x->right = T2;
 
     // Update heights
-    x->height = std::max(height(x->left), height(x->right)) + 1;
-    y->height = std::max(height(y->left), height(y->right)) + 1;
+    x->height = std::max(x->left.height, x->right.height) + 1;
+    y->height = std::max(y->left.height, y->right.height) + 1;
 
     // Return new root
     return y;
 }
 
 // Get Balance factor of node N
-int getBalance(Node *N) {
-    if (N == nullptr) return 0;
-    return height(N->left) - height(N->right);
+NODE_TEMPLATE
+int Node::getBalance() {
+    return height(this->left) - height(this->right);
 }
 
 // Recursive function to insert a key
 // in the subtree rooted with node and
 // returns the new root of the subtree.
-Node* insert(Node* node, Result *result, bool *error) {
+NODE_TEMPLATE
+Node* Node::insert(T *result, bool *error) {
     *error = false;
     /* 1. Perform the normal BST insertion */
     if (node == nullptr) return(newNode(result));
@@ -88,48 +71,45 @@ Node* insert(Node* node, Result *result, bool *error) {
     /* 3. Get the balance factor of this ancestor
         node to check whether this node became
         unbalanced */
-    int balance = getBalance(node);
+    int balance = Node::getBalance(node);
 
     // If this node becomes unbalanced, then
     // there are 4 cases
 
     // Left Left Case
     if (balance > 1 && result->getResult() < node->left->result->getResult())
-        return rightRotate(node);
+        return node->rightRotate();
 
     // Right Right Case
     if (balance < -1 && result->getResult() > node->right->result->getResult())
-        return leftRotate(node);
+        return node->leftRotate();
 
     // Left Right Case
     if (balance > 1 && result->getResult() > node->left->result->getResult())
     {
-        node->left = leftRotate(node->left);
-        return rightRotate(node);
+        node->left = node->left->leftRotate();
+        return node->rightRotate();
     }
 
     // Right Left Case
     if (balance < -1 && result->getResult() < node->right->result->getResult())
     {
-        node->right = rightRotate(node->right);
-        return leftRotate(node);
+        node->right = node->right->rightRotate();
+        return node->leftRotate();
     }
 
     /* return the (unchanged) node pointer */
     return node;
 }
 
-
-std::vector<Node*> searchAll(Node *root, float value, float range = 0.0000001) {
+NODE_TEMPLATE
+std::vector<Node*> Node::searchAll(E value) {
     std::vector<Node*> results;
-    return searchAll(&results, root, value, range);
+    return this->searchAll(results, value);
 }
 
-// TODO more accurate range
-std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float value, float range = 0.0000001) {
-    /* base case */
-    if (root == nullptr) return *results;
-
+NODE_TEMPLATE
+std::vector<Node*> Node::searchAll(std::vector<Node*> &results, E value) {
     float k1 = value-range, k2 = value+range;
 
     /* inorder type */
@@ -137,29 +117,31 @@ std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float valu
     /*  If root->data is greater than k1,
         then only we can get o/p keys
         in left subtree */
-    if (k1 < root->result->getResult()) searchAll(results, root->left, value, range);
+    if (k1 < root->result->getResult() && root->left != nullptr) searchAll(results, value);
 
     /* if root's data lies in range,
     then prints root's data */
-    if (k1 <= root->result->getResult() && k2 >= root->result->getResult()) results->push_back(root);
+    if (k1 <= root->result->getResult() && k2 >= root->result->getResult()) results.push_back(root);
 
     /*  If root->data is smaller than k2,
         then only we can get o/p keys
         in right subtree */
-    if (k2 > root->result->getResult()) searchAll(results, root->right, value, range);
+    if (k2 > root->result->getResult() && root->right != nullptr) searchAll(results, value);
 
-    return *results;
+    return results;
 }
 
-Result *search(Node *root, float value, float range = 0.0000001f) {
+NODE_TEMPLATE
+T *Node::search(NodeElementComparator<E> value) {
     std::vector<Node*> r = searchAll(root, value, range);
     for (Node *element : r) {
-        if (nearlyEqual(value, element->result->getResult())) return element->result;
+        if (value.equals(element->result)) return element->result;
     }
     return nullptr;
 }
 
-std::vector<Result*> getInorder(std::vector<Result*> *list, Node *root) {
+NODE_TEMPLATE
+std::vector<T*> Node::getInorder(std::vector<T*> *list, Node *root) {
     if (root != nullptr) {
         getInorder(list, root->left);
         list->push_back(root->result);
@@ -168,7 +150,8 @@ std::vector<Result*> getInorder(std::vector<Result*> *list, Node *root) {
     return *list;
 }
 
-std::vector<Result*> getInorder(Node *root) {
-    std::vector<Result*> list;
+NODE_TEMPLATE
+std::vector<T*> Node::getInorder(Node *root) {
+    std::vector<T*> list;
     return getInorder(&list, root);
 }

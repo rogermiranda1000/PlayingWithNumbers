@@ -2,35 +2,61 @@
 
 
 // C++ program to insert a node in AVL tree
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 #include <vector>
 #include <cmath> // max
-#include "float_range.h"
-#include "combinatoria.h"
 
-class Result;
+#define NODE_TEMPLATE template <class T, typename E, typename std::enable_if<std::is_base_of<NodeElementComparator<E>, T>::value>::type*>
+
+template <typename E>
+class NodeElementComparator {
+public:
+    virtual bool equals(NodeElementComparator<E> &e) = 0;
+    virtual E value() = 0;
+};
+
+template <class T, typename E, typename std::enable_if<std::is_base_of<NodeElementComparator<E>, T>::value>::type* = nullptr>
+class Node;
 
 // An AVL tree node
+NODE_TEMPLATE
 class Node {
 public:
-    friend Node* insert(Node* node, Result *result, bool *error);
-    friend std::vector<Node*> searchAll(std::vector<Node*> *results, Node *root, float value, float range);
-    friend std::vector<Node*> searchAll(Node *root, float value, float range);
-    friend Result *search(Node *root, float value, float range);
-    friend std::vector<Result*> getInorder(std::vector<Result*> *list, Node *root);
-    friend std::vector<Result*> getInorder(Node *root);
+    Node* insert(T *result, bool *error);
+    std::vector<Node*> searchAll(E value);
+    std::vector<Node*> searchAll(std::vector<Node*> *results, E value);
+    T *search(NodeElementComparator<E> value);
+    std::vector<T*> getInorder(Node *root);
+    std::vector<T*> getInorder(std::vector<T*> *list, Node *root);
 
 private:
-    Result *result;
+    T *result;
     Node *left;
     Node *right;
     int height;
 
-    friend Node *rightRotate(Node *y);
-    friend Node* newNode(Result *result);
-    friend int height(Node *N);
-    friend Node *leftRotate(Node *x);
-    friend int getBalance(Node *N);
+    Node *rightRotate();
+    Node *leftRotate();
+    int getBalance();
+
+
+    /* Helper function that allocates a
+       new node with the given key and
+       NULL left and right pointers. */
+    static Node* newNode(T *result) {
+        Node* node = new Node();
+        node->result = result;
+        node->left = nullptr;
+        node->right = nullptr;
+        node->height = 1;
+
+        return node;
+    }
+
+    static int getBalance(Node *n) {
+        if (n == nullptr) return 0;
+        return n->getBalance();
+    }
 };
 
 // This code is contributed by
